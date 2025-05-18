@@ -1,16 +1,25 @@
 #include <stdio.h>
 
+static arm_rfft_fast_instance_f32 fft_instance;
+static arm_biquad_casd_df1_inst_f32 iir_instance;
+
 void init_FFT( void ) {
-	arm_rfft_fast_instance_f32 fft_instance;
-	arm_rfft_fast_init_f32(&fft_instance, FFT_LENGTH);
+	arm_rfft_fast_init_f32(&fft_instance, FFT_LENGTH); // initializes FFT
 }
 
-void init_FIR( void ) {
-	arm_fir_init_f32(&S_L_FIR, nData_in_values, (float *) xData, pState, BlockSize);
-}
-
-void init_IIR( void ) {
-	arm_biquad_cascade_df1_init_f32(&S_IIR, IIR_ORDER, iirCoeffs, iirState);
+void load_IIR( float32_t[] iirCoeffs ) {
+	/*
+	 * The Digital Biquad Filter is the bulk of how our audio processing will be done
+	 * due to lower latency compared to FIR and preexisting literature
+	 * Sets coefficients inside IIR (different from performing the IIR)
+	 * The Digital Biquad Filter has the following structure:
+	 *          (b0/a0) + (b1/a0)*z^-1 + (b2/a0)*z^-2
+     * H(z) =   ---------------------------------------    (Eq 2)
+     *              1 + (a1/a0)*z^-1 + (a2/a0)*z^-2
+     *  Source: Robert Bristow-Johnson  <rbj@audioimagination.com>
+	 */
+	float32_t pState; // where data gets stored (not used when numStates = 0, but still necessary)
+	arm_biquad_cascade_df1_init_f32(&iir_instance, 0, &iirCoeffs, &pState); // store coeffs for future use
 }
 
 /*
@@ -26,11 +35,26 @@ float32_t[] perform_FFT(float32_t[] input_fft) {
  * inputs: X, H (input_signal =  sample_L)
  * output: Y
  */
-float32_t[] perform_IIR(float32_t[] X, float32_t[] H) {
-	arm_biquad_cascade_df1_f32(&S_IIR, inputSignal, iirOutput, BLOCK_SIZE);
-	arm_fir_f32(&S_FIR, inputSignal, firOutput, BLOCK_SIZE);
+float32_t[] perform_IIR(float32_t[] X) {
+	return arm_biquad_cascade_df1_f32(&iir_instance, X, iirOutput, BLOCK_SIZE);
 }
 
-float32_t[] perform_FIR(float32_t[] X, float32_t[] H) {
-	arm_fir_f32(&S_FIR, inputSignal, firOutput, BLOCK_SIZE);
+// pCoeffs: {b0, b1, b2, a1, a2}
+float32_t[] normalizeToBiquad( float32_t[] pCoeffs ) {
+	// takes coefficients of Z transform and rearranges them to be in form of Eqn 2
+	float32_t newB0 = pCoeffs[0]/pCoeffs[3]; // b0/a0
+	float32_t newB1 = pCoeffs[1]/pCoeffs[3]; // b1/a0
+	float32_t newB2 = pCoeffs[2]/pCoeffs[3]; // b1/a0
+	float32_t newA1 = pCoeffs[4]/pCoeffs[3]; // a1/a0
+	float32_t newA1 = pCoeffs[5]/pCoeffs[3]; // a2/a0
+
+	return {newB0, newB1, newB2, newA1, newA2};
+}
+
+float32_t omega( float32_t center_freq ) {
+	return (2*PI*center_freq/SAMPLING_FREQ);
+}
+
+float32_t alpha_bw( float32_t center_freq, float32_t bandwidth ) {
+	return (sin(omega(center_freq))*sinh(log10(2)*bandwidth*omega(center_freq)/(2*sin(omega(center_freq)))));
 }

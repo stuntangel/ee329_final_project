@@ -1,9 +1,20 @@
 #include "main.h"
-
+#include "filter_utils.h"
+#include <math.h>
 void SystemClock_Config(void);
 int main(void) {
   HAL_Init();
   SystemClock_Config();
+  init_FFT();
+  float32_t bandwidth = 200; // twice center_freq?
+  float32_t center_freq = 100;
+  pCoeffs = computeCoeffs(center_freq, bandwidth);
+  load_IIR(&pCoeffs);
+  float32_t X[256];
+  for (int i = 0; i <= 256; i++) {
+	  X[i] = sin(2*pi*100*i); // basic construction of a test function w/ center freq 100
+  }
+  float32_t Y[] = perform_IIR(&X);
   while (1) {
   }
 }
