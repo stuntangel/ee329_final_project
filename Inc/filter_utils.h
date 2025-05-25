@@ -9,3 +9,4 @@ float* perform_IIR(float* X);
 float* normalizeToBiquad( float* pCoeffs );
 float omega( float center_freq );
 float alpha_bw( float center_freq, float bandwidth );
+float alpha_q(float center_freq, float q_factor);
