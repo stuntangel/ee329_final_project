@@ -21,16 +21,19 @@ void load_IIR( float* iirCoeffs ) {
      *  Source: Robert Bristow-Johnson  <rbj@audioimagination.com>
 	 */
 	float pState; // where data gets stored (not used when numStates = 0, but still necessary)
-	arm_biquad_cascade_df1_init_f32(&iir_instance, 0, &iirCoeffs, &pState); // store coeffs for future use
+	arm_biquad_cascade_df1_init_f32(&iir_instance, 0, iirCoeffs, &pState); // store coeffs for future use
 }
 
 /*
  * input: input_fft[FFT_LENGTH]
  * output: output_fft_mag[FFT_LENGTH/2] (even fn, so only positive)
  */
-float32_t[] perform_FFT(float32_t[] input_fft) {
+float* perform_FFT(float* input_fft) {
+	float output_fft[64];
+	float output_fft_mag[64];
 	arm_rfft_fast_f32(&fft_instance, input_fft, output_fft, 0); // 0 is the # of complex samples
-	return arm_cmplx_mag_f32(output_fft, output_fft_mag, FFT_LENGTH/2); // return magnitude
+	arm_cmplx_mag_f32(output_fft, output_fft_mag, FFT_LENGTH/2); // return magnitude
+	return output_fft_mag;
 }
 /*
  * performs Y=X*H
@@ -38,7 +41,9 @@ float32_t[] perform_FFT(float32_t[] input_fft) {
  * output: Y
  */
 float* perform_IIR(float* X) {
-	return arm_biquad_cascade_df1_f32(&iir_instance, X, iirOutput, BLOCK_SIZE);
+	float iirOutput[64];
+	arm_biquad_cascade_df1_f32(&iir_instance, X, iirOutput, BLOCK_SIZE);
+	return iirOutput;
 }
 
 // pCoeffs: {b0, b1, b2, a1, a2}
@@ -48,7 +53,7 @@ float* normalizeToBiquad( float* pCoeffs ) {
 	float newB1 = pCoeffs[1]/pCoeffs[3]; // b1/a0
 	float newB2 = pCoeffs[2]/pCoeffs[3]; // b1/a0
 	float newA1 = pCoeffs[4]/pCoeffs[3]; // a1/a0
-	float newA1 = pCoeffs[5]/pCoeffs[3]; // a2/a0
+	float newA2 = pCoeffs[5]/pCoeffs[3]; // a2/a0
 	float coeffs[5] = {newB0, newB1, newB2, newA1, newA2};
 	return coeffs;
 }

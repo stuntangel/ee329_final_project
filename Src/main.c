@@ -8,8 +8,7 @@ int main(void) {
   init_FFT();
   float bandwidth = 200; // twice center_freq?
   float center_freq = 100;
-  float pCoeffs = computeCoeffs(center_freq, bandwidth);
-  load_IIR(pCoeffs);
+  load_IIR(computeCoeffs(center_freq, bandwidth));
   float X[256];
   for (int i = 0; i <= 256; i++) {
 	  X[i] = (float)sin(2*PI*100*i); // basic construction of a test function w/ center freq 100
