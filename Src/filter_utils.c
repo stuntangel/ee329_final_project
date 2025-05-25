@@ -1,7 +1,4 @@
 #include "filter_utils.h"
-#include "arm_math.h"
-#include <stdio.h>
-
 static arm_rfft_fast_instance_f32 fft_instance;
 static arm_biquad_casd_df1_inst_f32 iir_instance;
 

@@ -26,6 +26,6 @@
  * limitations under the License.
  */
 
-#include "arm_common_tables.c"
-#include "arm_const_structs.c"
+//#include "arm_common_tables.c"
+//#include "arm_const_structs.c"
 
