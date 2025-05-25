@@ -4,10 +4,10 @@
  * H(s) = 1 / (s^2 + s/Q + 1)
  */
 // pCoeffs: {b0, b1, b2, a1, a2}
-float* LPF(float bandwidth, float center_freq)
+float* LPF(float bandwidth, float corner_freq)
 {
-	float w0 = omega(center_freq);
-	float a = alpha_bw(center_freq, bandwidth);
+	float w0 = omega(corner_freq);
+	float a = alpha_bw(corner_freq, bandwidth);
 
 	float b1 = (1 - cos(w0));
 	float b0 = (b1/2);
@@ -29,10 +29,10 @@ float* LPF(float bandwidth, float center_freq)
  * a1 = -2cos(w0)
  * a2 = 1 - a
  */
-float* HPF(float bandwidth, float center_freq)
+float* HPF(float bandwidth, float corner_freq)
 {
-	float w0 = omega(center_freq);
-	float a = alpha_bw(center_freq, bandwidth);
+	float w0 = omega(corner_freq);
+	float a = alpha_bw(corner_freq, bandwidth);
 
 	float b0 = (1 + cos(w0) / 2;
 	float b1 = -(1 + cos(w0));
