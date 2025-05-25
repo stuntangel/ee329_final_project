@@ -1,0 +1,3 @@
+../Src/timer.c:7:6:Timer_setup_TIM2	1
+../Src/timer.c:17:9:checkFlag	2
+../Src/timer.c:27:6:TIM2_IRQHandler	3
