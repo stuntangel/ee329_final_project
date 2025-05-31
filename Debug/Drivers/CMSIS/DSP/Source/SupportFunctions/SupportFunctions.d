@@ -1,7 +1,8 @@
 Drivers/CMSIS/DSP/Source/SupportFunctions/SupportFunctions.o: \
  ../Drivers/CMSIS/DSP/Source/SupportFunctions/SupportFunctions.c \
  ../Drivers/CMSIS/DSP/Source/SupportFunctions/arm_copy_f32.c \
- ../Inc/arm_math.h ../Drivers/CMSIS/Include/cmsis_compiler.h \
+ /home/ryan/STM32CubeIDE/workspace_1.18.0/example/Drivers/CMSIS/DSP/Include/arm_math.h \
+ ../Drivers/CMSIS/Include/cmsis_compiler.h \
  ../Drivers/CMSIS/Include/cmsis_gcc.h \
  ../Drivers/CMSIS/DSP/Source/SupportFunctions/arm_copy_q15.c \
  ../Drivers/CMSIS/DSP/Source/SupportFunctions/arm_copy_q31.c \
@@ -23,7 +24,7 @@ Drivers/CMSIS/DSP/Source/SupportFunctions/SupportFunctions.o: \
  ../Drivers/CMSIS/DSP/Source/SupportFunctions/arm_q7_to_q15.c \
  ../Drivers/CMSIS/DSP/Source/SupportFunctions/arm_q7_to_q31.c
 ../Drivers/CMSIS/DSP/Source/SupportFunctions/arm_copy_f32.c:
-../Inc/arm_math.h:
+/home/ryan/STM32CubeIDE/workspace_1.18.0/example/Drivers/CMSIS/DSP/Include/arm_math.h:
 ../Drivers/CMSIS/Include/cmsis_compiler.h:
 ../Drivers/CMSIS/Include/cmsis_gcc.h:
 ../Drivers/CMSIS/DSP/Source/SupportFunctions/arm_copy_q15.c:
