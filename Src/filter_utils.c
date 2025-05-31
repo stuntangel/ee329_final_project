@@ -62,3 +62,8 @@ float omega( float center_freq ) {
 float alpha_bw( float center_freq, float bandwidth ) {
 	return (sin(omega(center_freq))*sinh(log10(2)*bandwidth*omega(center_freq)/(2*sin(omega(center_freq)))));
 }
+
+float alpha_q(float center_freq, float q_factor)
+{
+	return (sin(omega(center_freq)) / (2 * q_factor));
+}
