@@ -8,23 +8,15 @@ int main(void) {
   GPIO_Init_DAC();
   init_FFT();
   uint16_t center_freq = 400;
+  uint16_t bandwidth = 200;
   float32_t* lowpassCoeffs = computeLowpassCoeffs(center_freq, bandwidth);
   load_IIR(lowpassCoeffs);
   for (int idx = 0; idx < FFTLEN; idx++) {
 	  fft_in_buf[idx] = sin(2*PI*center_freq/FFTLEN);
   }
-  float32_t* Y = perform_IIR(X);
-  //Timer_setup_TIM2((int)ONESEC/(center_freq*FFT_LENGTH)); // initialize Tim2 at sampling rate
-
-
-  //float* Y = perform_IIR(X);
-  //TIM2->CR1 |= TIM_CR1_CEN; // start TIM2 CR1
-//  DAC_write(2000);
+  perform_IIR(fft_in_buf);
+  DAC_write(2000);
   while (1) {
-//	  for (int idx = 0; idx < FFT_LENGTH; idx++) {
-//		  for(int i=0; i <20000; i++);
-//		  DAC_write(idx*10);
-//	  }
   }
 }
 

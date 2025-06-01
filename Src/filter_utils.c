@@ -1,13 +1,11 @@
 #include "filter_utils.h"
+#include "stdlib.h"
 static arm_rfft_fast_instance_f32 FFTInstance;
 static arm_rfft_fast_instance_f32 *ptr_FFT_instance = &FFTInstance;
 static arm_biquad_casd_df1_inst_f32 iir_instance;
 static arm_biquad_casd_df1_inst_f32 *ptr_iir_instance = &iir_instance;
 #define NUMSECTIONS 1 // number of cascade sections
 static float32_t taps[4 * NUMSECTIONS];
-static float32_t coefficients[5 * NUMSECTIONS];
-static float32_t pState; // where data gets stored (not used when numStates = 0, but still necessary)
-static float32_t *ptr_pState = &pState;
 static float32_t rFFT_Out[FFTLEN] = {0}; // points to the output of the FFT function
 static float32_t dFFT[FFTLEN] = {0}; // points to the output of the magnitude of FFT function
 static float32_t iir_Out[FFTLEN] = {0}; // points to the output of IIR
@@ -27,7 +25,7 @@ void load_IIR( float* iirCoeffs ) {
      *              1 + (a1/a0)*z^-1 + (a2/a0)*z^-2
      *  Source: Robert Bristow-Johnson  <rbj@audioimagination.com>
 	 */
-	arm_biquad_cascade_df1_init_f32(ptr_iir_instance, NUMSECTIONS, coefficients, taps); // store coeffs for future use
+	arm_biquad_cascade_df1_init_f32(ptr_iir_instance, NUMSECTIONS, iirCoeffs, taps); // store coeffs for future use
 }
 
 /*
