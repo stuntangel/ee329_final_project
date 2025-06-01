@@ -1,9 +1,19 @@
 #include "filter_utils.h"
-static arm_rfft_fast_instance_f32 fft_instance;
+static arm_rfft_fast_instance_f32 FFTInstance;
+static arm_rfft_fast_instance_f32 *ptr_FFT_instance = &FFTInstance;
 static arm_biquad_casd_df1_inst_f32 iir_instance;
+static arm_biquad_casd_df1_inst_f32 *ptr_iir_instance = &iir_instance;
+#define NUMSECTIONS 1 // number of cascade sections
+static float32_t taps[4 * NUMSECTIONS];
+static float32_t coefficients[5 * NUMSECTIONS];
+static float32_t pState; // where data gets stored (not used when numStates = 0, but still necessary)
+static float32_t *ptr_pState = &pState;
+static float32_t rFFT_Out[FFTLEN] = {0}; // points to the output of the FFT function
+static float32_t dFFT[FFTLEN] = {0}; // points to the output of the magnitude of FFT function
+static float32_t iir_Out[FFTLEN] = {0}; // points to the output of IIR
 
 void init_FFT( void ) {
-	arm_rfft_fast_init_f32(&fft_instance, FFT_LENGTH); // initializes FFT
+	arm_rfft_4096_fast_init_f32(ptr_FFT_instance);
 }
 
 void load_IIR( float* iirCoeffs ) {
@@ -17,30 +27,26 @@ void load_IIR( float* iirCoeffs ) {
      *              1 + (a1/a0)*z^-1 + (a2/a0)*z^-2
      *  Source: Robert Bristow-Johnson  <rbj@audioimagination.com>
 	 */
-	float pState; // where data gets stored (not used when numStates = 0, but still necessary)
-	arm_biquad_cascade_df1_init_f32(&iir_instance, 0, iirCoeffs, &pState); // store coeffs for future use
+	arm_biquad_cascade_df1_init_f32(ptr_iir_instance, NUMSECTIONS, coefficients, taps); // store coeffs for future use
 }
 
 /*
  * input: input_fft[FFT_LENGTH]
  * output: output_fft_mag[FFT_LENGTH/2] (even fn, so only positive)
  */
-float* perform_FFT(float* input_fft) {
-	float output_fft[64];
-	float output_fft_mag[64];
-	arm_rfft_fast_f32(&fft_instance, input_fft, output_fft, 0); // 0 is the # of complex samples
-	arm_cmplx_mag_f32(output_fft, output_fft_mag, FFT_LENGTH/2); // return magnitude
-	return output_fft_mag;
+void perform_FFT(float* input_fft) {
+	arm_rfft_fast_f32(ptr_FFT_instance, input_fft, rFFT_Out, RFFT); // Performs FFT, stores
+	//data in rFFT_Out
+	arm_cmplx_mag_f32(rFFT_Out, dFFT, FFTLEN/2); // stores only magnitude
+	dFFT[0] = 0; // output stored in dFFT
 }
 /*
  * performs Y=X*H
  * inputs: X, H (input_signal =  sample_L)
  * output: Y
  */
-float* perform_IIR(float* X) {
-	float iirOutput[64];
-	arm_biquad_cascade_df1_f32(&iir_instance, X, iirOutput, BLOCK_SIZE);
-	return iirOutput;
+void perform_IIR(float* X) {
+	arm_biquad_cascade_df1_f32(ptr_iir_instance, X, iir_Out, BLOCK_SIZE);
 }
 
 // pCoeffs: {b0, b1, b2, a1, a2}
@@ -51,12 +57,17 @@ float* normalizeToBiquad( float* pCoeffs ) {
 	float newB2 = pCoeffs[2]/pCoeffs[3]; // b1/a0
 	float newA1 = pCoeffs[4]/pCoeffs[3]; // a1/a0
 	float newA2 = pCoeffs[5]/pCoeffs[3]; // a2/a0
-	float coeffs[5] = {newB0, newB1, newB2, newA1, newA2};
+	float* coeffs = (float*)malloc(5*sizeof(float));
+	coeffs[0] = newB0;
+	coeffs[1] = newB1;
+	coeffs[2] = newB2;
+	coeffs[3] = newA1;
+	coeffs[4] = newA2;
 	return coeffs;
 }
 
 float omega( float center_freq ) {
-	return (2*PI*center_freq/SAMPLING_FREQ);
+	return (2*PI*center_freq/FFTLEN);
 }
 
 float alpha_bw( float center_freq, float bandwidth ) {

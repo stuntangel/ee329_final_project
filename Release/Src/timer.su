@@ -1,0 +1,2 @@
+../Src/timer.c:5:6:Timer_setup_TIM2	0	static,ignoring_inline_asm
+../Src/timer.c:16:6:TIM2_IRQHandler	0	static

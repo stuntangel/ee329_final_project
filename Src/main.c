@@ -1,20 +1,30 @@
 #include "main.h"
-#include "filter_utils.h"
-#include <math.h>
+static float fft_in_buf[FFTLEN];
+
 void SystemClock_Config(void);
 int main(void) {
   HAL_Init();
   SystemClock_Config();
+  GPIO_Init_DAC();
   init_FFT();
-  float bandwidth = 200; // twice center_freq?
-  float center_freq = 100;
-  load_IIR(computeCoeffs(center_freq, bandwidth));
-  float X[256];
-  for (int i = 0; i <= 256; i++) {
-	  X[i] = (float)sin(2*PI*100*i); // basic construction of a test function w/ center freq 100
+  uint16_t center_freq = 400;
+  float32_t* lowpassCoeffs = computeLowpassCoeffs(center_freq, bandwidth);
+  load_IIR(lowpassCoeffs);
+  for (int idx = 0; idx < FFTLEN; idx++) {
+	  fft_in_buf[idx] = sin(2*PI*center_freq/FFTLEN);
   }
-  //float Y[] = perform_IIR(X);
+  float32_t* Y = perform_IIR(X);
+  //Timer_setup_TIM2((int)ONESEC/(center_freq*FFT_LENGTH)); // initialize Tim2 at sampling rate
+
+
+  //float* Y = perform_IIR(X);
+  //TIM2->CR1 |= TIM_CR1_CEN; // start TIM2 CR1
+//  DAC_write(2000);
   while (1) {
+//	  for (int idx = 0; idx < FFT_LENGTH; idx++) {
+//		  for(int i=0; i <20000; i++);
+//		  DAC_write(idx*10);
+//	  }
   }
 }
 

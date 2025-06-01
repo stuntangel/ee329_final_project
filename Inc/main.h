@@ -7,6 +7,11 @@ extern "C" {
 
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx_it.h"
+#include "filter_utils.h"
+#include "dac.h"
+#include "timer.h"
+#include <math.h>
+#include "filters.h"
 
 void Error_Handler(void);
 #ifdef __cplusplus
