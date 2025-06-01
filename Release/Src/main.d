@@ -25,8 +25,8 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h \
  ../Inc/stm32l4xx_it.h ../Inc/filter_utils.h \
  ../Inc/../Drivers/CMSIS/DSP/Include/arm_math.h \
- ../Drivers/CMSIS/Include/cmsis_compiler.h ../Inc/dac.h ../Inc/timer.h \
- ../Inc/filters.h
+ ../Drivers/CMSIS/Include/cmsis_compiler.h ../Inc/adc.h ../Inc/DAC.h \
+ ../Inc/timer.h ../Inc/filters.h
 ../Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Inc/stm32l4xx_hal_conf.h:
@@ -56,6 +56,7 @@ Src/main.o: ../Src/main.c ../Inc/main.h \
 ../Inc/filter_utils.h:
 ../Inc/../Drivers/CMSIS/DSP/Include/arm_math.h:
 ../Drivers/CMSIS/Include/cmsis_compiler.h:
-../Inc/dac.h:
+../Inc/adc.h:
+../Inc/DAC.h:
 ../Inc/timer.h:
 ../Inc/filters.h:

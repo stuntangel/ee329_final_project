@@ -1,1 +1,5 @@
-../Src/filters.c:7:8:computeLowpassCoeffs	32	static
+../Src/filters.c:7:8:LPF	48	static
+../Src/filters.c:32:8:HPF	56	static
+../Src/filters.c:57:8:BPF_Amp_Q	48	static
+../Src/filters.c:82:8:BPF_Amp_Unity	40	static
+../Src/filters.c:107:8:Notch	48	static

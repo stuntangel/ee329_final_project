@@ -5,3 +5,4 @@
 ../Src/filter_utils.c:51:8:normalizeToBiquad	1
 ../Src/filter_utils.c:67:7:omega	1
 ../Src/filter_utils.c:71:7:alpha_bw	1
+../Src/filter_utils.c:75:7:alpha_q	1

@@ -5,17 +5,18 @@ void SystemClock_Config(void);
 int main(void) {
   HAL_Init();
   SystemClock_Config();
-  GPIO_Init_DAC();
-  init_FFT();
+  DAC_Init(); //initialize DAC
+  ADC_init(); // initialize ADC
+  init_FFT(); // initialize FFT
   uint16_t center_freq = 400;
   uint16_t bandwidth = 200;
-  float32_t* lowpassCoeffs = computeLowpassCoeffs(center_freq, bandwidth);
+  float32_t* lowpassCoeffs = LPF(center_freq, bandwidth);
   load_IIR(lowpassCoeffs);
   for (int idx = 0; idx < FFTLEN; idx++) {
 	  fft_in_buf[idx] = sin(2*PI*center_freq/FFTLEN);
   }
-  perform_IIR(fft_in_buf);
-  DAC_write(2000);
+  perform_IIR(fft_in_buf); // perform IIR of input buffer
+  DAC_Write_Volt(2000);
   while (1) {
   }
 }

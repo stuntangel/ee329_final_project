@@ -1,1 +1,5 @@
-../Src/filters.c:7:8:computeLowpassCoeffs	1
+../Src/filters.c:7:8:LPF	1
+../Src/filters.c:32:8:HPF	1
+../Src/filters.c:57:8:BPF_Amp_Q	1
+../Src/filters.c:82:8:BPF_Amp_Unity	1
+../Src/filters.c:107:8:Notch	1

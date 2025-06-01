@@ -8,7 +8,8 @@ extern "C" {
 #include "stm32l4xx_hal.h"
 #include "stm32l4xx_it.h"
 #include "filter_utils.h"
-#include "dac.h"
+#include "adc.h"
+#include "DAC.h"
 #include "timer.h"
 #include <math.h>
 #include "filters.h"
