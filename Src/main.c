@@ -3,13 +3,20 @@
 #include "DAC.h"
 #include "filter_utils.h"
 #include <math.h>
+
+static float fft_in_buf[FFTLEN];
+
 void SystemClock_Config(void);
 int main(void) {
   HAL_Init();
   SystemClock_Config();
-  init_FFT();
-  float bandwidth = 200; // twice center_freq?
-  float center_freq = 100;
+  DAC_Init(); //initialize DAC
+  ADC_init(); // initialize ADC
+  init_FFT(); // initialize FFT
+  GPIO_init_pins(); // initialize POTS and AUDIO ports
+  grabConvertedResult()
+  uint16_t center_freq = 400;
+  uint16_t bandwidth = 200;
   load_IIR(LPF(center_freq, bandwidth));
   int X[256];
   for (int i = 0; i < SAMPLES; i++) {
@@ -27,6 +34,21 @@ int main(void) {
       delay_us(SAMPLE_INTVL);
     }
   }
+}
+
+float voltsToHz(float32_t volts) {
+	return 2000*volts/3.3+60;
+}
+
+void GPIO_init_pins( void ) {
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOFEN; // enable clock for GPIOF=POTS_PORT
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN; // enable clock for GPIOC=AUDIO_PORT
+	POTS_PORT->MODER |= POTS_ANALOG_MODER; // put in analog mode
+	AUDIO_PORT->MODER |= AUDIO_ANALOG_MODER; // put in analog mode
+	AUDIO_PORT->MODER &= ~AUDIO_DIGITAL_MODER; // put in digital input mode
+	AUDIO_PORT->OTYPER  &= ~AUDIO_DIGITAL_OTYPER; // put in digital output mode
+	AUDIO_PORT->PUPDR  &= ~AUDIO_DIGITAL_PUPDR; // put in digital output mode
+	AUDIO_PORT->OSPEEDR |= AUDIO_DIGITAL_OSPEEDR; // put in digital output mode
 }
 
 void SystemClock_Config(void) {

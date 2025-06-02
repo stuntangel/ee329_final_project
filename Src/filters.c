@@ -10,6 +10,12 @@ float* LPF(float bandwidth, float corner_freq)
 	float a = alpha_bw(corner_freq, bandwidth);
 
 	float b1 = (1 - cos(w0));
+float* LPF(float bandwidth, float corner_freq)
+{
+	float w0 = omega(corner_freq);
+	float a = alpha_bw(corner_freq, bandwidth);
+
+	float b1 = (1 - cos(w0));
 	float b0 = (b1/2);
 	float b2 = b0;
 	float a0 = (1 + a);

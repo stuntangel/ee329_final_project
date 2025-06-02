@@ -1,3 +1,0 @@
-../Src/dac.c:9:6:GPIO_Init_DAC	1
-../Src/dac.c:40:10:DAC_volt_conv	5
-../Src/dac.c:60:6:DAC_write	3

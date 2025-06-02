@@ -16,27 +16,26 @@
  *******************************************************************************
  USER CODE END Header */
 
- #ifndef DAC_H_
- #define DAC_H_
- 
- //#include "main.h"
- #include <stdint.h>
- 
- // Prototypes
- void DAC_Init(void);
- void SPI_Init(void);
- void DAC_Write(uint16_t data, int gain);
- void DAC_Write_Volt(int voltage);
- 
- // Ports and Pins
- #define DAC_PORT (GPIOA)
- #define DAC_PINS (GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_7)
- 
- // MCP4821 Specs
- #define MAX_VOLT (3300)
- #define MIN_VOLT (0)
- #define MAX_DIG  (0xFFF)
- #define MIN_DIG  (0x0)
- 
- #endif /* INC_DAC_H_ */
- 
+#ifndef DAC_H_
+#define DAC_H_
+
+//#include "main.h"
+#include <stdint.h>
+
+// Prototypes
+void DAC_Init(void);
+void SPI_Init(void);
+void DAC_Write(uint16_t data, int gain);
+void DAC_Write_Volt(int voltage);
+
+// Ports and Pins
+#define DAC_PORT (GPIOA)
+#define DAC_PINS (GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_7)
+
+// MCP4821 Specs
+#define MAX_VOLT (3300)
+#define MIN_VOLT (0)
+#define MAX_DIG  (0xFFF)
+#define MIN_DIG  (0x0)
+
+#endif /* INC_DAC_H_ */

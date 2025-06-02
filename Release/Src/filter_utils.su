@@ -1,7 +1,8 @@
-../Src/filter_utils.c:5:6:init_FFT	0	static
-../Src/filter_utils.c:9:6:load_IIR	16	static
-../Src/filter_utils.c:28:8:perform_FFT	520	static
-../Src/filter_utils.c:40:8:perform_IIR	264	static
-../Src/filter_utils.c:47:8:normalizeToBiquad	0	static
-../Src/filter_utils.c:58:7:omega	8	static
-../Src/filter_utils.c:62:7:alpha_bw	24	static
+../Src/filter_utils.c:13:6:init_FFT	0	static
+../Src/filter_utils.c:17:6:load_IIR	0	static
+../Src/filter_utils.c:35:6:perform_FFT	16	static
+../Src/filter_utils.c:46:6:perform_IIR	0	static
+../Src/filter_utils.c:51:8:normalizeToBiquad	32	static
+../Src/filter_utils.c:67:7:omega	0	static
+../Src/filter_utils.c:71:7:alpha_bw	24	static
+../Src/filter_utils.c:75:7:alpha_q	24	static
