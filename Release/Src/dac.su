@@ -1,3 +1,4 @@
-../Src/dac.c:27:6:GPIO_Init_DAC	0	static
-../Src/dac.c:58:10:DAC_volt_conv	0	static
-../Src/dac.c:78:6:DAC_write	8	static
+../Src/DAC.c:81:6:DAC_Write	0	static
+../Src/DAC.c:38:6:DAC_Write_Volt	8	static
+../Src/DAC.c:157:6:SPI_Init	0	static
+../Src/DAC.c:105:6:DAC_Init	0	static
