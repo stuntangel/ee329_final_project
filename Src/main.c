@@ -21,6 +21,13 @@ int main(void) {
   }
 }
 
+void GPIO_init_pins( void ) {
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN; // enable clock for GPIOC=POTS_PORT
+	POTS_PORT->MODER |= POTS_MODER; // put in analog mode
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOFEN; // enable clock for GPIOF=AUDIO_PORT
+	AUDIO_PORT->MODER |= AUDIO_MODER; // put in analog mode
+}
+
 void SystemClock_Config(void) {
   RCC_OscInitTypeDef RCC_OscInitStruct = {0};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};

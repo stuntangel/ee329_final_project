@@ -3193,6 +3193,8 @@ Discarded input sections
  .text          0x00000000        0x0 ./Src/main.o
  .data          0x00000000        0x0 ./Src/main.o
  .bss           0x00000000        0x0 ./Src/main.o
+ .text.GPIO_init_pins
+                0x00000000       0x44 ./Src/main.o
  .text.Error_Handler
                 0x00000000        0x4 ./Src/main.o
  .text          0x00000000        0x0 ./Src/stm32l4xx_hal_msp.o
