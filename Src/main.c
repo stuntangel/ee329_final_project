@@ -1,4 +1,6 @@
 #include "main.h"
+#include "delay.h"
+#include "DAC.h"
 #include "filter_utils.h"
 #include <math.h>
 void SystemClock_Config(void);
@@ -9,12 +11,21 @@ int main(void) {
   float bandwidth = 200; // twice center_freq?
   float center_freq = 100;
   load_IIR(LPF(center_freq, bandwidth));
-  float X[256];
-  for (int i = 0; i <= 256; i++) {
-	  X[i] = (float)sin(2*PI*100*i); // basic construction of a test 100 Hz tone
+  int X[256];
+  for (int i = 0; i < SAMPLES; i++) {
+    // basic construction of a test 100 Hz tone
+    // Amplitude in millivolts
+    // Time in nanoseconds
+	  X[i] = (int) (1000 * sin((2 * PI * 100) * (i * SAMPLE_INTVL)));
   }
   //float Y[] = perform_IIR(X);
   while (1) {
+    // Playback signal at 
+    for (int i = 0; i < SAMPLES; i++)
+    {
+      DAC_Write_Volt(X[i]);
+      delay_us(SAMPLE_INTVL );
+    }
   }
 }
 
