@@ -20,11 +20,11 @@ int main(void) {
   }
   //float Y[] = perform_IIR(X);
   while (1) {
-    // Playback signal at 
+    // Playback signal for SAMPLE_TIME at SAMPLE_INTVL speed
     for (int i = 0; i < SAMPLES; i++)
     {
       DAC_Write_Volt(X[i]);
-      delay_us(SAMPLE_INTVL );
+      delay_us(SAMPLE_INTVL);
     }
   }
 }

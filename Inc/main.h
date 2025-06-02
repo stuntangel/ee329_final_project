@@ -12,9 +12,9 @@ extern "C" {
 #define TRUE !FALSE
 #define SAMPLES (256)
 // Sample snapshot length (microseconds)
-#define SAMPLE_TIME (250)
-// Single sample period (nanoseconds)
-#define SAMPLE_INTVL (SAMPLES / (SAMPLE_TIME * 1000))
+#define SAMPLE_TIME (33333)
+// Single sample period (microseconds)
+#define SAMPLE_INTVL (SAMPLE_TIME / SAMPLES)
 
 void Error_Handler(void);
 #ifdef __cplusplus
