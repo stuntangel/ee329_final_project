@@ -12,14 +12,22 @@ int main(void) {
   grabConvertedResult()
   uint16_t center_freq = 400;
   uint16_t bandwidth = 200;
-  float32_t* lowpassCoeffs = LPF(center_freq, bandwidth);
-  load_IIR(lowpassCoeffs);
-  for (int idx = 0; idx < FFTLEN; idx++) {
-	  fft_in_buf[idx] = sin(2*PI*center_freq/FFTLEN);
+  load_IIR(LPF(center_freq, bandwidth));
+  int X[256];
+  for (int i = 0; i < SAMPLES; i++) {
+    // basic construction of a test 100 Hz tone
+    // Amplitude in millivolts
+    // Time in nanoseconds
+	  X[i] = (int) (1000 * sin((2 * PI * 100) * (i * SAMPLE_INTVL)));
   }
-  perform_IIR(fft_in_buf); // perform IIR of input buffer
-  DAC_Write_Volt(2000);
+  //float Y[] = perform_IIR(X);
   while (1) {
+    // Playback signal for SAMPLE_TIME at SAMPLE_INTVL speed
+    for (int i = 0; i < SAMPLES; i++)
+    {
+      DAC_Write_Volt(X[i]);
+      delay_us(SAMPLE_INTVL);
+    }
   }
 }
 

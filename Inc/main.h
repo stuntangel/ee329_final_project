@@ -39,6 +39,13 @@ extern "C" {
 #define RELEASE GPIO_PIN_5
 #define VOLUME GPIO_PIN_6
 
+#define SAMPLES (256)
+// Sample snapshot length (microseconds)
+#define SAMPLE_TIME (33333)
+// Single sample period (microseconds)
+#define SAMPLE_INTVL (SAMPLE_TIME / SAMPLES)
+
+
 void GPIO_init_pins( void );
 float voltsToHz( void );
 void Error_Handler(void);
