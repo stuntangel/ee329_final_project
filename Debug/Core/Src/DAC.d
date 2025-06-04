@@ -24,7 +24,7 @@ Core/Src/DAC.o: ../Core/Src/DAC.c ../Core/Inc/DAC.h ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_pwr_ex.h \
  ../Core/Inc/DAC.h ../Core/Inc/timer.h ../Core/Inc/filter_util.h \
- ../Core/Inc/filters.h ../Core/Inc/stm32l4xx_it.h
+ ../Core/Inc/filters.h ../Core/Inc/stm32l4xx_it.h ../Core/Inc/adc.h
 ../Core/Inc/DAC.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
@@ -56,3 +56,4 @@ Core/Src/DAC.o: ../Core/Src/DAC.c ../Core/Inc/DAC.h ../Core/Inc/main.h \
 ../Core/Inc/filter_util.h:
 ../Core/Inc/filters.h:
 ../Core/Inc/stm32l4xx_it.h:
+../Core/Inc/adc.h:

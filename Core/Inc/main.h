@@ -11,6 +11,7 @@ extern "C" {
 #include "timer.h"
 #include "filter_util.h"
 #include "filters.h"
+#include "adc.h"
 #define POTS_PORT GPIOF
   // PF{3,4,5,6,7,8,9,10,14,15}
 #define AUDIO_DIGITAL_MODER (GPIO_MODER_MODE0 | GPIO_MODER_MODE1 | GPIO_MODER_MODE2)
@@ -36,6 +37,8 @@ extern "C" {
 #define RELEASE GPIO_PIN_5
 #define VOLUME GPIO_PIN_6
 void Error_Handler(void);
+float voltToBandwidth(uint32_t adc_output);
+float voltToCutoff(uint32_t adc_output);
 void GPIO_init_pins( void );
 #ifdef __cplusplus
 }

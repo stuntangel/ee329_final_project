@@ -8,6 +8,7 @@ int main(void)
   HAL_Init();
   SystemClock_Config();
   DAC_Init();
+  SysTick_Init();
   ADC_init();
   GPIO_init_pins();
   biq_stage1.a = (float*)malloc(2*sizeof(float));
@@ -18,9 +19,9 @@ int main(void)
   biq_stage1.Yn2 = 0;
   Timer_setup_TIM2(SAMPLE_INTVL);
   int X[SAMPLES] = {0};
-  int j = 0;
+//  int j = 0;
   for (int i = 0; i < SAMPLES; i++) {
-	  X[i] = 1500*sinf(2*PI*i/SAMPLES)+1500;
+	  X[i] = 1000*sinf(2*PI*i/SAMPLES)+1000;
 //	  if (j > 6) {
 //		  X[i] = 2000;
 //	  }
@@ -28,27 +29,32 @@ int main(void)
 //		  X[i] = 1000;
 //	  }
 //	  j++;
-	  if (j > 12) {
-		  j=0;
-	  }
+//	  if (j > 12) {
+//		  j=0;
+//	  }
   }
   int i = 0;
   TIM2->CR1 |= TIM_CR1_CEN; // start timer
-  uint32_t prev_cutoff_freq = 15;
-  uint32_t prev_bandwidth = 20;
+  float prev_cutoff_freq = 50;
+  float cutoff_freq = 0;
+  float prev_bandwidth = 20;
+  float bandwidth = 0;
+  ADC3->CR |= ADC_CR_ADSTART;                // start 1st conversion
   LPF(&biq_stage1, prev_bandwidth, prev_cutoff_freq); // load LPF
   while (1)
   {
 	  if (checkADCFlag()) {
-		  cutoff_freq = voltToFreq(grabConvertedResult());
-	  }
-	  if(((cutoff_freq - prev_cutoff_freq) > 5) || ((cutoff_freq - prev_cutoff_freq) < 5) ){
-		  LPF(&biq_stage1, prev_bandwidth, prev_cutoff_freq); // load LPF
+		  cutoff_freq = voltToCutoff(grabConvertedResult());
+		  ADC3->CR |= ADC_CR_ADSTART;                // start 1st conversion
+		  if(((cutoff_freq - prev_cutoff_freq) > 5) || ((cutoff_freq - prev_cutoff_freq) < 5) ){
+			  LPF(&biq_stage1, prev_bandwidth, cutoff_freq); // load LPF
+			  prev_cutoff_freq = cutoff_freq;
+		  }
 	  }
 	  if (checkTimerFlag()) {
 		  TIM2->CCR1+=(SAMPLE_INTVL);
 		  computeBiquad(&biq_stage1, (float)(X[i]), &output_val);
-		  DAC_Write_Volt((int)X[i]);
+		  DAC_Write_Volt((int)output_val);
 
 		  i++;
 	  }
@@ -56,6 +62,15 @@ int main(void)
 		  i=0;
 	  }
   }
+}
+
+// 30 to 80
+float voltToCutoff(uint32_t adc_output) {
+	return (50*((float)adc_output)/4095)+30;
+}
+// 1 to 35
+float voltToBandwidth(uint32_t adc_output) {
+	return (35*((float)adc_output)/4095)+1;
 }
 
 void GPIO_init_pins( void ) {
