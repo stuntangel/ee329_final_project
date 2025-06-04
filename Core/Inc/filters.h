@@ -4,6 +4,7 @@
 #include "stm32l4xx_it.h"
 #define PI 3.1415926535
 #define SAMPLE_TIME (400000)
+//#define SAMPLE_TIME (23000)
 #define SAMPLES (256)
 #define SAMPLE_INTVL (int)(SAMPLE_TIME / SAMPLES)
 void LPF(biquad_t* biq_stage1, float bandwidth, float corner_freq);

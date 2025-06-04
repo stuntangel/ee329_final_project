@@ -8,6 +8,8 @@ int main(void)
   HAL_Init();
   SystemClock_Config();
   DAC_Init();
+  ADC_init();
+  GPIO_init_pins();
   biq_stage1.a = (float*)malloc(2*sizeof(float));
   biq_stage1.b = (float*)malloc(3*sizeof(float));
   biq_stage1.Xn1 = 0;
@@ -16,24 +18,37 @@ int main(void)
   biq_stage1.Yn2 = 0;
   Timer_setup_TIM2(SAMPLE_INTVL);
   int X[SAMPLES] = {0};
+  int j = 0;
   for (int i = 0; i < SAMPLES; i++) {
-	  X[i] = 1000*sinf(2*PI*i/SAMPLES)+1000;
-//	  if ((i % 2) == 0) {
+	  X[i] = 1500*sinf(2*PI*i/SAMPLES)+1500;
+//	  if (j > 6) {
 //		  X[i] = 2000;
 //	  }
 //	  else {
 //		  X[i] = 1000;
 //	  }
+//	  j++;
+	  if (j > 12) {
+		  j=0;
+	  }
   }
   int i = 0;
   TIM2->CR1 |= TIM_CR1_CEN; // start timer
-  LPF(&biq_stage1, 20, 10); // load LPF
+  uint32_t prev_cutoff_freq = 15;
+  uint32_t prev_bandwidth = 20;
+  LPF(&biq_stage1, prev_bandwidth, prev_cutoff_freq); // load LPF
   while (1)
   {
+	  if (checkADCFlag()) {
+		  cutoff_freq = voltToFreq(grabConvertedResult());
+	  }
+	  if(((cutoff_freq - prev_cutoff_freq) > 5) || ((cutoff_freq - prev_cutoff_freq) < 5) ){
+		  LPF(&biq_stage1, prev_bandwidth, prev_cutoff_freq); // load LPF
+	  }
 	  if (checkTimerFlag()) {
 		  TIM2->CCR1+=(SAMPLE_INTVL);
 		  computeBiquad(&biq_stage1, (float)(X[i]), &output_val);
-		  DAC_Write_Volt((int)output_val);
+		  DAC_Write_Volt((int)X[i]);
 
 		  i++;
 	  }
@@ -43,6 +58,16 @@ int main(void)
   }
 }
 
+void GPIO_init_pins( void ) {
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOFEN; // enable clock for GPIOF=POTS_PORT
+	RCC->AHB2ENR |= RCC_AHB2ENR_GPIOCEN; // enable clock for GPIOC=AUDIO_PORT
+	POTS_PORT->MODER |= POTS_ANALOG_MODER; // put in analog mode
+	AUDIO_PORT->MODER |= AUDIO_ANALOG_MODER; // put in analog mode
+	AUDIO_PORT->MODER &= ~AUDIO_DIGITAL_MODER; // put in digital input mode
+	AUDIO_PORT->OTYPER  &= ~AUDIO_DIGITAL_OTYPER; // put in digital output mode
+	AUDIO_PORT->PUPDR  &= ~AUDIO_DIGITAL_PUPDR; // put in digital output mode
+	AUDIO_PORT->OSPEEDR |= AUDIO_DIGITAL_OSPEEDR; // put in digital output mode
+}
 
 void SystemClock_Config(void)
 {

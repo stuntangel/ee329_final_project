@@ -1,4 +1,6 @@
 "./Core/Src/DAC.o"
+"./Core/Src/adc.o"
+"./Core/Src/delay.o"
 "./Core/Src/filter_util.o"
 "./Core/Src/filters.o"
 "./Core/Src/main.o"

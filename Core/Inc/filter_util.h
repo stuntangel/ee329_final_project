@@ -10,7 +10,6 @@ typedef struct {
 
   int Yn1;    //y[n-1] (prev output)
   int Yn2;    //y[n-2] (prev prev output)
-
 }biquad_t;
 void computeBiquad(biquad_t *biq, float input, float* output);
 
